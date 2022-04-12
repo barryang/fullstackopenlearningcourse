@@ -1,13 +1,14 @@
-import { createAnec } from "../reducers/anecdoteReducer";
-import { useDispatch } from "react-redux";
+import { connect } from "react-redux";
+import { createAnec } from '../reducers/anecdoteReducer'
+import { changeNot } from "../reducers/notificationReducer";
 
-const AnecForm = () => {
-    const dispatch = useDispatch()
-    const addAnec = (event) => {
+const AnecForm = (props) => {
+    const addAnec = async (event) => {
         event.preventDefault()
         const content = event.target.anec.value
         event.target.anec.value = ''
-        dispatch(createAnec(content))
+        props.createAnec(content)
+        props.changeNot(content)
     }
     return(
         <div>
@@ -20,4 +21,20 @@ const AnecForm = () => {
     )
 }
 
-export default AnecForm
+const mapDispatchToProps = dispatch => {
+    return {
+        createAnec: value => {
+            dispatch(createAnec(value))
+        },
+        changeNot: value => {
+            dispatch(changeNot(value, 10))
+        }
+    }
+}
+
+const ConnectedAnec = connect(
+    null,
+    mapDispatchToProps
+)(AnecForm)
+
+export default ConnectedAnec
